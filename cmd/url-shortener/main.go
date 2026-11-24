@@ -5,6 +5,8 @@ import (
 	"log/slog"
 	"os"
 	"url-shorneter/internal/config"
+	"url-shorneter/internal/config/lib/logger/sl"
+	"url-shorneter/internal/config/storage/sqlite"
 )
 
 const (
@@ -21,7 +23,13 @@ func main() {
 	log.Info("starting url-shortener", slog.String("env", cfg.Env))
 	log.Debug("debug messages are enabled")
 
-	// todo  init storage: sqlite -> postgres
+	storage, err := sqlite.New(cfg.StoragePath) // todo  init storage: sqlite -> postgres
+
+	if err != nil {
+		log.Error("failed to init storage", sl.Err(err))
+		os.Exit(1) // приложение падает с кодом ошибки
+	}
+	_ = storage
 
 	// todo  init router chi
 

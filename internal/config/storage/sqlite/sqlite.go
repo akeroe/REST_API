@@ -3,6 +3,8 @@ package sqlite
 import (
 	"database/sql"
 	"fmt"
+
+	_ "github.com/mattn/go-sqlite3" // init sqlite3 driver
 )
 
 type Storage struct {
@@ -16,7 +18,7 @@ func New(storagePath string) (*Storage, error) {
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err) // врап ошибки
 	}
-	// stmt - подготовленный запрос 
+	// stmt - подготовленный запрос
 	stmt, err := db.Prepare(` 
 	CREATE TABLE IF NOT EXISTS url(
 		id INTEGER PRIMARY KEY,
@@ -35,4 +37,3 @@ func New(storagePath string) (*Storage, error) {
 
 	return &Storage{db: db}, nil
 }
-
