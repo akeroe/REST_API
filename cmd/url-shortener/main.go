@@ -7,6 +7,9 @@ import (
 	"url-shorneter/internal/config"
 	"url-shorneter/internal/config/lib/logger/sl"
 	"url-shorneter/internal/config/storage/sqlite"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 const (
@@ -30,8 +33,14 @@ func main() {
 		os.Exit(1) // приложение падает с кодом ошибки
 	}
 
-	
-	// todo  init router chi
+	router := chi.NewRouter() // todo  init router chi
+
+	// middleware - цепочка прочих хендлеров
+	router.Use(middleware.RequestID) // middleware.RequestID - генерирует уникальный идентификатор для каждого запроса
+	router.Use(middleware.Logger)    // middleware.Logger - логирует информацию о каждом запросе
+	router.Use(mwLogger.New(log))    // mwLogger.New(log) - логирует информацию о каждом запросе с использованием slog
+	router.Use(middleware.Recoverer) // middleware.Recoverer - восстанавливает приложение после паники и возвращает 500 Internal Server Error
+	router.Use(middleware.URLFormat)  // middleware.URLFormat - позволяет использовать форматирование URL, например, /path.json или /path.xml
 
 	// todo run server
 
