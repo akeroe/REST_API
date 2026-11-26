@@ -29,8 +29,8 @@ func main() {
 		log.Error("failed to init storage", sl.Err(err))
 		os.Exit(1) // приложение падает с кодом ошибки
 	}
-	_ = storage
 
+	
 	// todo  init router chi
 
 	// todo run server
